@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class FilmRequest extends FormRequest
+class CommentRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class FilmRequest extends FormRequest
 	 */
 	public function authorize()
 	{
-		return true;
+		return Auth::check();
 	}
 
 	/**
@@ -25,13 +26,7 @@ class FilmRequest extends FormRequest
 	{
 		return [
 			'name' => 'required|max:100',
-			'description' => 'required|max:1000',
-			'release_date' => 'required|date',
-			'rating' => 'required|integer|between:1,5',
-			'ticket_price' => 'required|regex:/^\d*(\.\d{1,2})?$/',// with 2 decimal point
-			'country_code' => 'required|not_in:0',
-			'genre' => 'required',
-//			'photo' => 'required',
+			'comment' => 'required|max:1000',
 		];
 	}
 }

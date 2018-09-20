@@ -13,7 +13,11 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            @if(Session::has('message'))
+                <p class="alert {{ \Illuminate\Support\Facades\Session::get('alert-class', 'alert-info') }}">{{ \Illuminate\Support\Facades\Session::get('message') }}</p>
+            @endif
+                <div class="col-md-8">
+
                 <div class="card">
                     <div class="card-header">{{__('film.create-film')}}</div>
 
@@ -93,32 +97,38 @@
 
                                 <div class="col-md-6">
                                     <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">$</span>
-                                    </div>
-                                    <input pattern="^\d+(?:\.\d{0,2})$" id="ticket_price" type="text"
-                                           class="form-control{{ $errors->has('ticket_price') ? ' is-invalid' : '' }}"
-                                           name="ticket_price" value="{{ old('ticket_price') }}" required>
-                                    @if ($errors->has('ticket_price'))
-                                        <span class="invalid-feedback" role="alert">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input pattern="^\d+(?:\.\d{0,2})$" id="ticket_price" type="text"
+                                               class="form-control{{ $errors->has('ticket_price') ? ' is-invalid' : '' }}"
+                                               name="ticket_price" value="{{ old('ticket_price') }}" required>
+                                        @if ($errors->has('ticket_price'))
+                                            <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('ticket_price') }}</strong>
                                         </span>
-                                    @endif
-                                </div>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="country"
+                                <label for="country_code"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Country') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="country" class="form-control" name="country" required>
+                                    <select id="country_code" class="form-control" name="country_code" required>
                                         <option value=""></option>
                                         @foreach(config('film.countries') as $key => $country)
                                             <option value="{{$key}}">{{$country}}</option>
                                         @endforeach
                                     </select>
+
+                                    @if ($errors->has('country_code'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('country_code') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -132,15 +142,51 @@
                                             <option value="{{$genre->id}}">{{$genre->name}}</option>
                                         @endforeach
                                     </select>
+                                    @if ($errors->has('genre'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('genre') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="photo"
-                                       class="col-md-4 col-form-label text-md-right">{{ __('Photo') }}</label>
+                            <div class="row">
+                                <div data-preview="#photo"
+                                     data-aspectRatio="1"
+                                     data-crop="true"
+                                     class="form-group col-md-12 image"
+                                >
+                                    <div>
+                                        <label for="image"
+                                               class="">{{ __('Photo') }}</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6" style="margin-bottom: 20px;">
+                                            <img id="mainImage" src="{{ url( old('photo') ? old('photo') : '')  }}">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="docs-preview clearfix">
+                                                <div id="photo" class="img-preview preview-lg">
+                                                    <img src=""
+                                                         style="display: block; min-width: 0px !important; min-height: 0px !important; max-width: none !important; max-height: none !important; margin-left: -32.875px; margin-top: -18.4922px; transform: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group">
+                                        <label class="btn btn-primary btn-file">
+                                            {{ __('Choose file') }} <input type="file" accept="image/*"
+                                                                           id="uploadImage">
+                                            <input type="hidden" id="hiddenImage" name="photo">
+                                        </label>
+                                    </div>
 
-                                <div class="col-md-6">
-                                    <img class="cropper" id="photo">
+                                    @if ($errors->has('photo'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('photo') }}</strong>
+                                        </span>
+                                    @endif
+
                                 </div>
                             </div>
 
@@ -162,8 +208,6 @@
 
     <script src="{{asset('/')}}js/select2.min.js"></script>
     <script src="{{asset('/')}}js/jquery.validate.min.js"></script>
-    {{--<script src="{{asset('/')}}js/additional-methods.min.js"></script>--}}
-    {{--<script src="{{asset('/plugins/')}}/cropper/cropper.common.js"></script>--}}
     <script src="{{asset('/plugins/')}}/cropper/cropper.js"></script>
 
     <script>
@@ -176,7 +220,115 @@
 
             $('#genre').select2();
 
-            $('#photo').cropper({});
+            $('.image').each(function (index) {
+                // Find DOM elements under this form-group element
+                var $mainImage = $(this).find('#mainImage');
+                var $uploadImage = $(this).find("#uploadImage");
+                var $hiddenImage = $(this).find("#hiddenImage");
+                var $rotateLeft = $(this).find("#rotateLeft")
+                var $rotateRight = $(this).find("#rotateRight")
+                var $zoomIn = $(this).find("#zoomIn")
+                var $zoomOut = $(this).find("#zoomOut")
+                var $reset = $(this).find("#reset")
+                var $remove = $(this).find("#remove")
+                // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
+                var options = {
+                    viewMode: 2,
+                    checkOrientation: false,
+                    autoCropArea: 1,
+                    responsive: true,
+                    preview: $(this).attr('data-preview'),
+                    aspectRatio: $(this).attr('data-aspectRatio')
+                };
+                var crop = $(this).attr('data-crop');
+
+                // Hide 'Remove' button if there is no image saved
+                if (!$mainImage.attr('src')) {
+                    $remove.hide();
+                }
+                // Initialise hidden form input in case we submit with no change
+                $hiddenImage.val($mainImage.attr('src'));
+
+
+                // Only initialize cropper plugin if crop is set to true
+                if (crop) {
+
+                    $remove.click(function () {
+                        $mainImage.cropper("destroy");
+                        $mainImage.attr('src', '');
+                        $hiddenImage.val('');
+                        $rotateLeft.hide();
+                        $rotateRight.hide();
+                        $zoomIn.hide();
+                        $zoomOut.hide();
+                        $reset.hide();
+                        $remove.hide();
+                    });
+                } else {
+
+                    $(this).find("#remove").click(function () {
+                        $mainImage.attr('src', '');
+                        $hiddenImage.val('');
+                        $remove.hide();
+                    });
+                }
+
+                $uploadImage.change(function () {
+                    var fileReader = new FileReader(),
+                        files = this.files,
+                        file;
+
+                    if (!files.length) {
+                        return;
+                    }
+                    file = files[0];
+
+                    if (/^image\/\w+$/.test(file.type)) {
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function () {
+                            $uploadImage.val("");
+                            if (crop) {
+                                $mainImage.cropper(options).cropper("reset", true).cropper("replace", this.result);
+                                // Override form submit to copy canvas to hidden input before submitting
+                                $('form').submit(function () {
+                                    var imageURL = $mainImage.cropper('getCroppedCanvas').toDataURL(file.type);
+                                    $hiddenImage.val(imageURL);
+                                    return true; // return false to cancel form action
+                                });
+                                $rotateLeft.click(function () {
+                                    $mainImage.cropper("rotate", 90);
+                                });
+                                $rotateRight.click(function () {
+                                    $mainImage.cropper("rotate", -90);
+                                });
+                                $zoomIn.click(function () {
+                                    $mainImage.cropper("zoom", 0.1);
+                                });
+                                $zoomOut.click(function () {
+                                    $mainImage.cropper("zoom", -0.1);
+                                });
+                                $reset.click(function () {
+                                    $mainImage.cropper("reset");
+                                });
+                                $rotateLeft.show();
+                                $rotateRight.show();
+                                $zoomIn.show();
+                                $zoomOut.show();
+                                $reset.show();
+                                $remove.show();
+
+                            } else {
+                                $mainImage.attr('src', this.result);
+                                $hiddenImage.val(this.result);
+                                $remove.show();
+                            }
+                        };
+                    } else {
+                        alert("Please choose an image file.");
+                    }
+                });
+
+            });
 
         });
     </script>

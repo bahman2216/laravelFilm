@@ -21,6 +21,7 @@ Route::group( [ 'prefix' => 'films', 'as' => 'films.', 'namespace' => '\App\Http
 	Route::get( '/', [ 'as' => 'index', 'uses' => 'FilmController@index' ] );
 	Route::get( '/{slug}', [ 'as' => 'show', 'uses' => 'FilmController@show' ] );
 	Route::post( '/store', [ 'as' => 'store', 'uses' => 'FilmController@store' ] );
+
 	Route::put( '/{id}', [ 'as' => 'update', 'uses' => 'FilmController@update' ] );
 	Route::delete( '/{id}', [ 'as' => 'delete', 'uses' => 'FilmController@delete' ] );
 } );

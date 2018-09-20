@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Film;
 use App\Http\Requests\FilmRequest as Request;
+use App\Http\Requests\CommentRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class FilmController extends Controller
 {
@@ -34,7 +38,16 @@ class FilmController extends Controller
 	{
 		$film = Film::create($request->all());
 
-		return response()->json($film, 201);
+		$film->genres()->attach($request->genre);
+
+		Session::flash('alert-class', 'alert-success');
+		Session::flash('message', 'Film successfully added!');
+
+		if($request->ajax()) {
+			return response()->json( $film, 201 );
+		}
+
+		return redirect(route('films.create'));
 	}
 
 	public function update(Request $request, $id)
@@ -50,5 +63,20 @@ class FilmController extends Controller
 		$film->delete();
 
 		return response()->json(null, 204);
+	}
+
+	public function commentStore(CommentRequest $request){
+
+		$film = Film::find($request->fid);
+
+		$comment = Comment::create([
+			'name' => $request->name,
+			'comment' => $request->comment,
+			'user_id' => Auth::user()->id,
+		]);
+
+		$film->comments()->save($comment);
+
+		return response()->json(['message' => 'Comment sent!'], 201);
 	}
 }

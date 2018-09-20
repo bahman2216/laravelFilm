@@ -16,7 +16,7 @@ class Film extends Model
 		'release_date',
 		'rating',
 		'ticket_price',
-		'country_id',
+		'country_code',
 		'photo',
 	];
 
