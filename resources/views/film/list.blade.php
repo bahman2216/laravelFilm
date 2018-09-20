@@ -16,8 +16,10 @@
                     <a href="{{route('films.show', ['slug' => $film->slug])}}">{{$film->name}}</a>
                 </div>
                 <div class="card-body">
-                    <div>{{$film->description}}</div>
-
+                    <div class="row">
+                    <div class="col-md-6">{{$film->description}}</div>
+                    <div class="col-md-6"><img src="{{$film->photo}} " style="max-width: 300px"/></div>
+                    </div>
                     <hr>
 
                     @if(\Illuminate\Support\Facades\Auth::check())
