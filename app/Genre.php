@@ -12,6 +12,6 @@ class Genre extends Model
 	 * many to many relation between film and genre
 	 */
     public function films(){
-    	return $this->blongToMany(Film::class);
+    	return $this->belongsToMany(Film::class);
     }
 }

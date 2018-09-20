@@ -9,14 +9,20 @@ class FilmController extends Controller
 {
 	public function index()
 	{
-		$films =  Film::paginate(1);
+		$films = Film::with('comments')->paginate(1);
 
 		return view('film.list', ['films' => $films]);
 	}
 
-	public function show($slug)
+	public function show($slug, Request $request)
 	{
-		return Film::where('slug', $slug)->first();
+		$film = Film::where('slug', $slug)->first();
+
+		if($request->ajax()) {
+			return response()->json( $film, 200 );
+		}
+
+		return view('film.show', ['film'=>$film]);
 	}
 
 	public function create()

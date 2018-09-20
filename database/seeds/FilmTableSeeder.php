@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Film;
+use Faker\Factory as Faker;
+use Illuminate\Database\Eloquent\Model;
+
 
 class FilmTableSeeder extends Seeder
 {
@@ -11,32 +16,19 @@ class FilmTableSeeder extends Seeder
      */
     public function run()
     {
-	    $county = config('countries')->random();
-	    $settlement = $county->settlements->random();
 
-	    factory(App\Role::class, 20)->create();
+	    factory(App\Film::class, 3)->create();
+	    factory(App\Genre::class, 4)->create();
 
-		// Populate users
-	    factory(App\User::class, 50)->create();
+	    factory(App\User::class, 1)->create();
 
-		// Get all the roles attaching up to 3 random roles to each user
-	    $roles = App\Role::all();
-
-		// Populate the pivot table
-	    App\User::all()->each(function ($user) use ($roles) {
-		    $user->roles()->attach(
-			    $roles->random(rand(1, 3))->pluck('id')->toArray()
-		    );
+	    factory(App\Film::class, 3)->create()->each(function ($film) {
+		    $film->genres()->save(factory(App\Genre::class)->make());
 	    });
 
-	    \Illuminate\Support\Facades\DB::table('films')->insert([
-		    'name' => str_random(10),
-		    'description' => str_random(1000),
-		    'release_date' => date('YY/mm/dd'),
-		    'rating' => range(1, 5),
-		    'ticket_price' => range(30, 300),
-		    'country_code' => $settlement,
-		    'photo' => str_random(100),
-	    ]);
+	    factory(App\Film::class, 3)->create()->each(function ($film) {
+		    factory(\App\Comment::class, 1)->create(['film_id'=>$film->id]);
+	    });
+
     }
 }

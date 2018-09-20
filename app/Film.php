@@ -24,7 +24,11 @@ class Film extends Model
 	 * many to many relation between film and genre
 	 */
 	public function genres(){
-		return $this->blongToMany(Genre::class);
+		return $this->belongsToMany(Genre::class);
+	}
+
+	public function comments(){
+		return $this->hasMany(Comment::class);
 	}
 
 }

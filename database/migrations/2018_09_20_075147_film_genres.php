@@ -13,7 +13,7 @@ class FilmGenres extends Migration
      */
     public function up()
     {
-	    Schema::create('film_genres', function (Blueprint $table) {
+	    Schema::create('film_genre', function (Blueprint $table) {
 		    $table->integer('film_id')->unsigned();
 		    $table->integer('genre_id')->unsigned();
 	    });
@@ -27,6 +27,6 @@ class FilmGenres extends Migration
      */
     public function down()
     {
-	    Schema::dropIfExists('film_genres');
+	    Schema::dropIfExists('film_genre');
     }
 }
