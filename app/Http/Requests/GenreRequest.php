@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FilmRequest extends FormRequest
+class GenreRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -25,13 +25,6 @@ class FilmRequest extends FormRequest
 	{
 		return [
 			'name' => 'required|max:100',
-			'description' => 'required|max:1000',
-			'release_date' => 'required|date',
-			'rating' => 'required|integer|between:1,5',
-			'ticket_price' => 'required|regex:/^\d*(\.\d{1,2})?$/',// with 2 decimal point
-			'country_code' => 'required|not_in:0',
-			'genre' => 'required',
-			'photo' => 'required',
 		];
 	}
 }

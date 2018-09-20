@@ -10,7 +10,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>--}}
+    {{--<script src="{{ asset('js/app.js') }}" defer></script>--}}
+    <script src="{{ asset('js/app.js') }}" ></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -18,6 +20,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -39,6 +42,19 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
+
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Film
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{route('films.create')}}">New film</a>
+                                <a class="dropdown-item" href="{{route('films.index')}}">Films</a>
+{{--                                <a class="dropdown-item" href="{{route('genres.index')}}">Genres</a>--}}
+                                <a class="dropdown-item" href="{{route('genres.create')}}">New genre</a>
+                            </div>
+                        </div>
+
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>

@@ -21,7 +21,7 @@ class CreateFilmsTable extends Migration
             $table->date('release_date')->comment('the release date of film');
             $table->tinyInteger('rating')->unsigned()->comment('the rating of film. between 1 to 5');
             $table->integer('ticket_price')->unsigned()->comment('the ticket price of film. price in $');
-            $table->integer('country_id')->unsigned()->comment('the country of film. country list stored in config file');
+            $table->string('country_code', 3)->comment('the country of film. country list stored in config file');
             $table->binary('photo')->comment('the photo of film.');
 
 	        $table->softDeletes();

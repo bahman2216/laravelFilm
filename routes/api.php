@@ -24,3 +24,10 @@ Route::group( [ 'prefix' => 'films', 'as' => 'films.', 'namespace' => '\App\Http
 	Route::put( '/{id}', [ 'as' => 'update', 'uses' => 'FilmController@update' ] );
 	Route::delete( '/{id}', [ 'as' => 'delete', 'uses' => 'FilmController@delete' ] );
 } );
+Route::group( [ 'prefix' => 'genres', 'as' => 'genres.', 'namespace' => '\App\Http\Controllers' ], function () {
+	Route::get( '/', [ 'as' => 'index', 'uses' => 'GenreController@index' ] );
+	Route::get( '/{id}', [ 'as' => 'show', 'uses' => 'GenreController@show' ] );
+	Route::post( '/store', [ 'as' => 'store', 'uses' => 'GenreController@store' ] );
+	Route::put( '/{id}', [ 'as' => 'update', 'uses' => 'GenreController@update' ] );
+	Route::delete( '/{id}', [ 'as' => 'delete', 'uses' => 'GenreController@delete' ] );
+} );

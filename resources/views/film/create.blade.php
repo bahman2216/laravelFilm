@@ -18,7 +18,7 @@
                     <div class="card-header">{{__('film.create-film')}}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('films.store') }}">
+                        <form id="form-film" method="POST" action="{{ route('films.store') }}">
                             @csrf
                             <div class="form-group row">
                                 <label for="name"
@@ -92,15 +92,19 @@
                                        class="col-md-4 col-form-label text-md-right">{{ __('Ticket Price') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="ticket_price" type="text"
+                                    <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+                                    </div>
+                                    <input pattern="^\d+(?:\.\d{0,2})$" id="ticket_price" type="text"
                                            class="form-control{{ $errors->has('ticket_price') ? ' is-invalid' : '' }}"
                                            name="ticket_price" value="{{ old('ticket_price') }}" required>
-
                                     @if ($errors->has('ticket_price'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('ticket_price') }}</strong>
                                         </span>
                                     @endif
+                                </div>
                                 </div>
                             </div>
 
@@ -123,9 +127,9 @@
                                        class="col-md-4 col-form-label text-md-right">{{ __('Genre') }}</label>
 
                                 <div class="col-md-6">
-                                    <select class="js-example-basic-multiple" name="genre[]" multiple="multiple">
-                                        @foreach(\App\Genre::all() as $key => $genre)
-                                            <option value="{{$key}}">{{$genre}}</option>
+                                    <select class="genre" id="genre" name="genre[]" multiple="multiple">
+                                        @foreach(\App\Genre::all() as $genre)
+                                            <option value="{{$genre->id}}">{{$genre->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -156,14 +160,21 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{{asset('/')}}js/select2.min.js"></script>
+    <script src="{{asset('/')}}js/jquery.validate.min.js"></script>
+    {{--<script src="{{asset('/')}}js/additional-methods.min.js"></script>--}}
+    {{--<script src="{{asset('/plugins/')}}/cropper/cropper.common.js"></script>--}}
     <script src="{{asset('/plugins/')}}/cropper/cropper.js"></script>
 
     <script>
-
         $(document).ready(function () {
-            $('.js-example-basic-multiple').select2();
+
+            $("#form-film").validate({
+                validClass: "text-success",
+                errorClass: "text-danger",
+            });
+
+            $('#genre').select2();
 
             $('#photo').cropper({});
 

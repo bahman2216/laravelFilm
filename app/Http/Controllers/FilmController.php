@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Film;
-use Illuminate\Http\Request;
+use App\Http\Requests\FilmRequest as Request;
 
 class FilmController extends Controller
 {
@@ -14,9 +14,9 @@ class FilmController extends Controller
 		return view('film.list', ['films' => $films]);
 	}
 
-	public function show($id)
+	public function show($slug)
 	{
-		return Film::find($id);
+		return Film::where('slug', $slug)->first();
 	}
 
 	public function create()

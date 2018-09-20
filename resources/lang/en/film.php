@@ -10,6 +10,7 @@ return [
 
 	'create-film' => 'Create Film',
 	'Name' => 'Name',
+	'Genre Name' => 'Genre Name',
 	'Description' => 'Description',
 	'Release Date' => 'Release Date',
 	'Rating' => 'Rating',
@@ -18,5 +19,6 @@ return [
 	'Genre' => 'Genre',
 	'Photo' => 'Photo',
 	'Create' => 'Create',
+	'Create Genre' => 'Create Genre',
 
 ];

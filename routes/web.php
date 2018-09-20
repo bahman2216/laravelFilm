@@ -20,6 +20,10 @@ Route::group( [ 'prefix' => 'films', 'as' => 'films.', 'namespace' => '\App\Http
 	Route::get( '/', [ 'as' => 'index', 'uses' => 'FilmController@index' ] );
 	Route::get( '/{slug}', [ 'as' => 'show', 'uses' => 'FilmController@show' ] );
 } );
+Route::group( [ 'prefix' => 'genres', 'as' => 'genres.', 'namespace' => '\App\Http\Controllers' ], function () {
+	Route::get( '/create', [ 'as' => 'create', 'uses' => 'GenreController@create' ] );
+	Route::get( '/', [ 'as' => 'index', 'uses' => 'GenreController@index' ] );
+} );
 
 Auth::routes();
 
