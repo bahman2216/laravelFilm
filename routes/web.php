@@ -15,7 +15,14 @@ Route::get('/', function () {
     return redirect('/films');
 });
 
+Route::group( [ 'prefix' => 'films', 'as' => 'films.', 'namespace' => '\App\Http\Controllers' ], function () {
+	Route::get( '/create', [ 'as' => 'create', 'uses' => 'FilmController@create' ] );
+	Route::get( '/', [ 'as' => 'index', 'uses' => 'FilmController@index' ] );
+	Route::get( '/{slug}', [ 'as' => 'show', 'uses' => 'FilmController@show' ] );
+} );
+
 Auth::routes();
+
 
 
 

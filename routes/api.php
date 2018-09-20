@@ -17,10 +17,10 @@ Route::middleware( 'auth:api' )->get( '/user', function ( Request $request ) {
 	return $request->user();
 } );
 
-Route::group( [ 'prefix' => 'films', 'as' => 'films.', 'namespace' => 'App\Http\Controllers' ], function () {
+Route::group( [ 'prefix' => 'films', 'as' => 'films.', 'namespace' => '\App\Http\Controllers' ], function () {
 	Route::get( '/', [ 'as' => 'index', 'uses' => 'FilmController@index' ] );
 	Route::get( '/{slug}', [ 'as' => 'show', 'uses' => 'FilmController@show' ] );
-	Route::post( '/', [ 'as' => 'store', 'uses' => 'FilmController@store' ] );
+	Route::post( '/store', [ 'as' => 'store', 'uses' => 'FilmController@store' ] );
 	Route::put( '/{id}', [ 'as' => 'update', 'uses' => 'FilmController@update' ] );
 	Route::delete( '/{id}', [ 'as' => 'delete', 'uses' => 'FilmController@delete' ] );
 } );
